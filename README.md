@@ -1,12 +1,21 @@
 # Blagoj Atanasovski
 
 <img src="res/profile.jpg" style="float: right; width: 100px; border-radius:50px"/>
-I'm a Software Engineer and Head of Software Development at [adeptcode.io](https://adeptcode.io). I work with Kotlin and the Spring Framework, TimescaleDB and PostgreSQL, Golang and Helm. 
+I'm a Software Engineer and Head of Software Development at [adeptcode.io](https://adeptcode.io). Previously Software Engineer at [Timescale](https://timescale.com) and Team Lead at [Sorsix](https://sorsix.com). 
 
-1. [Code Contributions](#code-contributions)
-2. [Contact](#contact)
+I work with Kotlin and the Spring Framework, TimescaleDB and PostgreSQL, Golang and Helm. 
 
-## Code Contributions
+1. [Contact](#contact)
+1. [Latest Code Contributions](#latest-code-contributions)
+1. [Publications](#publications)
+
+## Contact
+
+* e-mail: blagoj ат atanasovski.dev
+
+* GitHub: [atanasovskib](https://github.com/atanasovskib)
+
+## Latest Code Contributions
 
 * [Promscale](https://github.com/timescale/promscale) - An open-source analytical platform for Prometheus metrics
 <p align="center">
@@ -25,8 +34,18 @@ I'm a Software Engineer and Head of Software Development at [adeptcode.io](https
 
 * [Outflux](https://github.com/timescale/outflux) - Export data from InfluxDB to TimescaleDB 
 
-## Contact
+## Publications
 
-* e-mail: blagoj ат atanasovski.dev
+* Blagoj Atanasovski, Milos Bogdanovic, Goran Velinov et al. (2018) On defining a model driven architecture for an enterprise e-health system, Enterprise Information
+Systems, DOI: 10.1080/17517575.2018.1521996
+* Blagoj Atanasovski, Miloš Bogdanović, Goran Velinov et al. (2017) Transforming an Enterprise E- Health System from Process Oriented to Model Driven Architecture, 7th International Conference on Information Society and Technology ICIST 2017.
+* Atanasovski, B., Ristov, S., Gusev, M., & Anchev, N. EDUCache Simulator for Teaching Computer Architecture and Organization.
+* Atanasovski, B., Ristov, S., Gusev, M., & Anchev, N. (2012). MMCacheSim: A Highly Configurable Matrix Multiplication Cache Simulator.
+* Anchev, N., Gusev, M., Ristov, S., & Atanasovski, B. (2013). Optimal Cache Replacement Policy for Matrix Multiplication. In ICT Innovations 2012 (pp. 71-80). Springer Berlin Heidelberg.
+* Ristov, S., Atanasovski, B., Gusev, M., & Anchev, N. (2013, September). Hands-on exercises to support computer architecture students using EDUCache simulator. In Computer Science and Information Systems (FedCSIS), 2013 Federated Conference on (pp.751-758). IEEE.
+* Ristov, S., Gusev, M., Atanasovski, B., & Anchev, N. (2013). Using EDUCache Simulator for the Computer Architecture and Organization Course.International Journal of Engineering Pedagogy (iJEP), 3(3), pp-47.
+* Anchev, N., Gusev, M., Ristov, S., & Atanasovski, B. (2013, May). Intel vs AMD: Matrix multiplication performance. In Information & Communication Technology Electronics & Microelectronics (MIPRO), 2013 36th International Convention on (pp. 182-187). IEEE.
+* Anchev, N., Gusev, M., Ristov, S., & Atanasovski, B. Some Optimization Techniques of the Matrix Multiplication Algorithm.
+* Ristov, S., Atanasovski, B., Gusev, M., & Anchev, N. (2013, September). EDUCacheIC: Interactive and collaborative successor of the EDUCache simulator. In Interactive Collaborative Learning (ICL), 2013 International Conference on (pp. 360-366). IEEE.
 
-* GitHub: [atanasovskib](https://github.com/atanasovskib)
+Google Scholar: https://scholar.google.com/scholar?q=Blagoj+Atanasovski
