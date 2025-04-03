@@ -1,9 +1,22 @@
 # Blagoj Atanasovski
 
-<img src="res/profile.jpg" style="float: right; width: 100px; border-radius:50px"/>
-I'm a Software Engineer and Head of Software Development at [adeptcode.io](https://adeptcode.io). Previously Software Engineer at [Timescale](https://timescale.com) and Team Lead at [Sorsix](https://sorsix.com). 
+I'm a Senior Software Engineer at [Cast AI](https://cast.ai) and co-founder of [AdeptCode](https://adeptcode.io).
 
-I work with Kotlin and the Spring Framework, TimescaleDB and PostgreSQL, Golang and Helm. 
+I work with Kubernetes and Go, currently creating seamless cross-region, cross-cloud capabilities in Kubernetes clusters so you can 
+1. reach resources that might be missing in your region without migrating your whole cluster
+1. reach cheaper resources
+1. connect your own compute with that of managed k8s
+
+Previously Software Engineer at: 
+* Reporting Team at Cast AI
+* Aequus Ads, which got acquired by Moloco
+* [Timescale](https://timescale.com) 
+* [Sorsix](https://sorsix.com)
+
+Worked with 
+* ClickHouse to aggregate and serve huge amounts of data
+* Kotlin and the Spring Framework to build a ad mediation platform with an Open Real Time Bidding exchange
+* Built tooling to use TimescaleDB/Postgres as long term storage for Prometheus. 
 
 1. [Contact](#contact)
 1. [Latest Code Contributions](#latest-code-contributions)
@@ -15,11 +28,11 @@ I work with Kotlin and the Spring Framework, TimescaleDB and PostgreSQL, Golang 
 
 * GitHub: [atanasovskib](https://github.com/atanasovskib)
 
-## Latest Code Contributions
+## Some OSS Code Contributions
 
 * [Promscale](https://github.com/timescale/promscale) - An open-source analytical platform for Prometheus metrics
 <p align="center">
-<a href="https://github.com/timescale/promscale" align="center"><img src="https://raw.githubusercontent.com/timescale/promscale/master/docs/assets/promscale-arch.png" alt="Promscale Architecture Diagram" width="800"/></a>
+<a href="https://github.com/timescale/promscale" align="center"><img src="https://raw.githubusercontent.com/timescale/promscale/master/docs/assets/promscale-arch.png" alt="Promscale Architecture Diagram" width="500"/></a>
 <br/>Image From: https://github.com/timescale/promscale
 </p>
 
@@ -49,3 +62,8 @@ Systems, DOI: 10.1080/17517575.2018.1521996
 * Ristov, S., Atanasovski, B., Gusev, M., & Anchev, N. (2013, September). EDUCacheIC: Interactive and collaborative successor of the EDUCache simulator. In Interactive Collaborative Learning (ICL), 2013 International Conference on (pp. 360-366). IEEE.
 
 Google Scholar: https://scholar.google.com/scholar?q=Blagoj+Atanasovski
+
+
+## Keywords for crawlers
+
+* Golang, k8s, prometheus, observability, operators, liqo, Timescale, TimescaleDB, ClickHouse
