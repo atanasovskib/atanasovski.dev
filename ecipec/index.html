@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platformer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    html { min-height: 100vh; }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    #game-over {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(6px);
+    }
+    #game-over.show {
+      display: flex;
+    }
+    #game-over h1 {
+      font: 700 clamp(1.75rem, 6vw, 2.75rem) system-ui, sans-serif;
+      color: #f1f5f9;
+      letter-spacing: 0.04em;
+    }
+    #game-over button {
+      font: 600 1rem system-ui, sans-serif;
+      padding: 0.65rem 1.4rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #0f172a;
+      background: #e2e8f0;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    }
+    #game-over button:hover {
+      background: #f8fafc;
+    }
+    #character-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1.25rem;
+      background: #0f172a;
+      color: #f1f5f9;
+      overflow: auto;
+    }
+    #character-menu.hidden {
+      display: none;
+    }
+    #character-menu h1 {
+      font: 700 clamp(1.35rem, 4.5vw, 2rem) system-ui, sans-serif;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+    #character-menu h2 {
+      font: 600 0.95rem system-ui, sans-serif;
+      color: #94a3b8;
+      margin-bottom: 0.65rem;
+    }
+    .pick-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      max-width: 620px;
+    }
+    .pick-option {
+      padding: 0;
+      border: 3px solid #334155;
+      border-radius: 12px;
+      background: #1e293b;
+      cursor: pointer;
+      overflow: hidden;
+      width: 108px;
+      height: 108px;
+      flex-shrink: 0;
+    }
+    .pick-option img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+    .pick-option:hover {
+      border-color: #64748b;
+    }
+    .pick-option:focus-visible {
+      outline: 2px solid #38bdf8;
+      outline-offset: 3px;
+    }
+    .pick-option.is-selected {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+    }
+    #start-game-btn {
+      font: 600 1.05rem system-ui, sans-serif;
+      padding: 0.75rem 1.75rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #0f172a;
+      background: #38bdf8;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      margin-top: 0.25rem;
+    }
+    #start-game-btn:hover {
+      background: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="game-over" aria-live="polite">
+    <h1>Game Over</h1>
+    <button type="button" id="restart-btn">Start again</button>
+  </div>
+  <div id="character-menu" aria-label="Character selection">
+    <h1>Choose your characters</h1>
+    <div>
+      <h2>Who is chased</h2>
+      <div id="ball-options" class="pick-options" role="group" aria-label="Character that is chased">
+        <button type="button" class="pick-option is-selected" data-ball="eci_pec.png" aria-pressed="true" aria-label="eci_pec">
+          <img src="eci_pec.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-ball="cat.png" aria-pressed="false" aria-label="cat">
+          <img src="cat.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-ball="ladybug.png" aria-pressed="false" aria-label="ladybug">
+          <img src="ladybug.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-ball="monter.png" aria-pressed="false" aria-label="monter">
+          <img src="monter.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-ball="moth.png" aria-pressed="false" aria-label="moth">
+          <img src="moth.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-ball="pinat.png" aria-pressed="false" aria-label="pinat">
+          <img src="pinat.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-ball="mamenmem.png" aria-pressed="false" aria-label="mamenmem">
+          <img src="mamenmem.png" alt="" width="108" height="108" />
+        </button>
+      </div>
+    </div>
+    <div>
+      <h2>Who does the chasing</h2>
+      <div id="monster-options" class="pick-options" role="group" aria-label="Character that chases">
+        <button type="button" class="pick-option" data-monster="eci_pec.png" aria-pressed="false" aria-label="eci_pec">
+          <img src="eci_pec.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="cat.png" aria-pressed="false" aria-label="cat">
+          <img src="cat.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="ladybug.png" aria-pressed="false" aria-label="ladybug">
+          <img src="ladybug.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option is-selected" data-monster="monter.png" aria-pressed="true" aria-label="monter">
+          <img src="monter.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="moth.png" aria-pressed="false" aria-label="moth">
+          <img src="moth.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="pinat.png" aria-pressed="false" aria-label="pinat">
+          <img src="pinat.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="mamenmem.png" aria-pressed="false" aria-label="mamenmem">
+          <img src="mamenmem.png" alt="" width="108" height="108" />
+        </button>
+      </div>
+    </div>
+    <button type="button" id="start-game-btn">Start game</button>
+  </div>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    const keys = { ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false };
+
+    const ball = {
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      r: 14,
+      onGround: false,
+    };
+
+    const ballImg = new Image();
+    ballImg.src = "eci_pec.png";
+    const ballImgVisualScale = 2;
+
+    const MONSTER_BASE_SPEED = 200;
+    let monsterNightCount = 0;
+
+    function bumpMonsterSpeedForNewNight() {
+      monsterNightCount++;
+      monster.speed = MONSTER_BASE_SPEED * Math.pow(1.05, monsterNightCount - 1);
+    }
+
+    const monsterImg = new Image();
+    const monster = {
+      x: 0,
+      speed: MONSTER_BASE_SPEED,
+      height: 72,
+      loaded: false,
+      placed: false,
+    };
+    monsterImg.onload = () => {
+      monster.loaded = true;
+      resize();
+    };
+    monsterImg.src = "monter.png";
+
+    const moveSpeed = 320;
+    const jumpSpeed = 580;
+    const gravity = 980;
+
+    const SLEEP_MS = 10_000;
+    const AWAKE_MS = 15_000;
+    const CYCLE_MS = SLEEP_MS + AWAKE_MS;
+
+    function cycleT(now) {
+      return now % CYCLE_MS;
+    }
+
+    function isSleeping(now) {
+      return cycleT(now) < SLEEP_MS;
+    }
+
+    function timerSeconds(now) {
+      const t = cycleT(now);
+      const dayMax = Math.ceil(SLEEP_MS / 1000);
+      const nightMax = Math.ceil(AWAKE_MS / 1000);
+      if (t < SLEEP_MS) {
+        return Math.max(1, Math.min(dayMax, Math.ceil((SLEEP_MS - t) / 1000)));
+      }
+      return Math.max(1, Math.min(nightMax, Math.ceil((CYCLE_MS - t) / 1000)));
+    }
+
+    function getChairs(vw, gy) {
+      const cw = 86;
+      const margin = 28;
+      const seatRise = 56;
+      const seatInset = 12;
+      const seatTop = gy - seatRise;
+      const backH = 72;
+      const leftX = margin;
+      const rightX = vw - margin - cw;
+      return [
+        {
+          x: leftX,
+          w: cw,
+          seatTop,
+          seatLeft: leftX + seatInset,
+          seatRight: leftX + cw - seatInset,
+          trunkLeft: leftX,
+          trunkRight: leftX + cw,
+          backH,
+        },
+        {
+          x: rightX,
+          w: cw,
+          seatTop,
+          seatLeft: rightX + seatInset,
+          seatRight: rightX + cw - seatInset,
+          trunkLeft: rightX,
+          trunkRight: rightX + cw,
+          backH,
+        },
+      ];
+    }
+
+    function horizontalOverlapBallSeat(ball, left, right) {
+      return ball.x + ball.r > left && ball.x - ball.r < right;
+    }
+
+    function resolveCircleRect(ball, rect) {
+      const cx = ball.x;
+      const cy = ball.y;
+      const r = ball.r;
+      if (cx + r <= rect.left || cx - r >= rect.right || cy + r <= rect.top || cy - r >= rect.bottom) {
+        return;
+      }
+      const closestX = Math.min(Math.max(cx, rect.left), rect.right);
+      const closestY = Math.min(Math.max(cy, rect.top), rect.bottom);
+      let dx = cx - closestX;
+      let dy = cy - closestY;
+      const dsq = dx * dx + dy * dy;
+      if (dsq < 1e-6) {
+        const pen = Math.min(rect.right - cx, cx - rect.left, cy - rect.top, rect.bottom - cy);
+        if (pen === rect.right - cx) ball.x = rect.right + r;
+        else if (pen === cx - rect.left) ball.x = rect.left - r;
+        else if (pen === cy - rect.top) {
+          ball.y = rect.top - r;
+          ball.vy = 0;
+          ball.onGround = true;
+        } else {
+          ball.y = rect.bottom + r;
+          ball.vy = 0;
+        }
+        return;
+      }
+      const dist = Math.sqrt(dsq);
+      dx /= dist;
+      dy /= dist;
+      ball.x = closestX + dx * r;
+      ball.y = closestY + dy * r;
+      if (Math.abs(dy) > Math.abs(dx) && dy < 0) {
+        ball.vy = Math.min(ball.vy, 0);
+        ball.onGround = true;
+      }
+      if (Math.abs(dy) > Math.abs(dx) && dy > 0) ball.vy = Math.max(ball.vy, 0);
+    }
+
+    function landOnSurfaces(ball, gy, chairs, vw) {
+      const surfaces = chairs.map((c) => ({
+        left: c.seatLeft,
+        right: c.seatRight,
+        top: c.seatTop,
+      }));
+      surfaces.push({ left: 0, right: vw, top: gy });
+      surfaces.sort((a, b) => a.top - b.top);
+      for (const s of surfaces) {
+        if (!horizontalOverlapBallSeat(ball, s.left, s.right)) continue;
+        const bottom = ball.y + ball.r;
+        if (ball.vy >= 0 && bottom >= s.top && bottom <= s.top + 20) {
+          ball.y = s.top - ball.r;
+          ball.vy = 0;
+          ball.onGround = true;
+          return;
+        }
+      }
+    }
+
+    function isBallOnChairSeat(ball, chairs) {
+      const bottom = ball.y + ball.r;
+      for (const c of chairs) {
+        if (!horizontalOverlapBallSeat(ball, c.seatLeft, c.seatRight)) continue;
+        if (bottom >= c.seatTop - 2 && bottom <= c.seatTop + 8) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function circleRectOverlap(cx, cy, r, left, top, right, bottom) {
+      const closestX = Math.max(left, Math.min(cx, right));
+      const closestY = Math.max(top, Math.min(cy, bottom));
+      const dx = cx - closestX;
+      const dy = cy - closestY;
+      return dx * dx + dy * dy <= r * r;
+    }
+
+    let gameOver = false;
+    let gameWon = false;
+    let gameStarted = false;
+    const WIN_PIZZA_SLICES = 6;
+    const START_ENERGY = 10;
+    const DRAIN_PX_PER_ENERGY = 500;
+    const ENERGY_PIZZA_BONUS = 5;
+    const ENERGY_PIZZA_SPAWN_MS = 5000;
+
+    const COOKIE_R = 11;
+    const COOKIES_PER_NIGHT = 8;
+    const cookies = [];
+    let coins = 0;
+    let pizzaSlices = 0;
+    let pizzaSlice = null;
+    const energyPizzaSlices = [];
+    let nextEnergySpawnAt = 0;
+    const PIZZA_R = 14;
+    let prevSleeping = undefined;
+    let energy = START_ENERGY;
+    let energyBarVisual = START_ENERGY;
+    let distanceSinceEnergyLoss = 0;
+    let prevBallX = 0;
+    let prevBallY = 0;
+
+    function spawnCookies(vw, gy, chairs) {
+      cookies.length = 0;
+      for (let i = 0; i < COOKIES_PER_NIGHT; i++) {
+        for (let t = 0; t < 60; t++) {
+          const x = COOKIE_R + Math.random() * (vw - 2 * COOKIE_R);
+          let ok = true;
+          for (const c of chairs) {
+            if (x + COOKIE_R > c.trunkLeft - 6 && x - COOKIE_R < c.trunkRight + 6) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) {
+            cookies.push({ x });
+            break;
+          }
+        }
+      }
+    }
+
+    function cookieCenterY(gy) {
+      return gy - COOKIE_R;
+    }
+
+    function pizzaCenterY(gy) {
+      return gy - PIZZA_R;
+    }
+
+    function spawnPizzaSlice(vw, gy, chairs, mw) {
+      pizzaSlice = null;
+      const { minX, maxX } = pizzaSpawnBounds(vw, gy, chairs, mw);
+      for (let t = 0; t < 60; t++) {
+        const x = minX + Math.random() * (maxX - minX);
+        let ok = true;
+        for (const c of chairs) {
+          if (x + PIZZA_R > c.trunkLeft - 6 && x - PIZZA_R < c.trunkRight + 6) {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) {
+          pizzaSlice = { x };
+          break;
+        }
+      }
+    }
+
+    function pushRandomEnergyPizzaSlice(vw, gy, chairs, mw) {
+      const { minX, maxX } = pizzaSpawnBounds(vw, gy, chairs, mw);
+      for (let t = 0; t < 60; t++) {
+        const x = minX + Math.random() * (maxX - minX);
+        let ok = true;
+        for (const c of chairs) {
+          if (x + PIZZA_R > c.trunkLeft - 6 && x - PIZZA_R < c.trunkRight + 6) {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) {
+          energyPizzaSlices.push({ x });
+          return;
+        }
+      }
+    }
+
+    function showGameOverUI() {
+      document.getElementById("game-over").classList.add("show");
+    }
+
+    function hideGameOverUI() {
+      document.getElementById("game-over").classList.remove("show");
+    }
+
+    function resetGame() {
+      const { w } = viewport();
+      const gy = groundY();
+      const chairs = getChairs(w, gy);
+      ball.x = w / 2;
+      ball.y = gy - ball.r;
+      ball.vx = 0;
+      ball.vy = 0;
+      ball.onGround = true;
+      keys.ArrowLeft = keys.ArrowRight = keys.ArrowUp = keys.ArrowDown = false;
+      if (monster.loaded) {
+        const { w: mw } = monsterDrawSize();
+        const now = performance.now();
+        if (isSleeping(now)) {
+          monster.x = sleepAnchorX(w, mw, chairs);
+        } else {
+          monster.x = clampMonsterToChairs(w * 0.2, mw, w, chairs);
+        }
+      }
+      coins = 0;
+      pizzaSlices = 0;
+      cookies.length = 0;
+      pizzaSlice = null;
+      energyPizzaSlices.length = 0;
+      nextEnergySpawnAt = 0;
+      energy = START_ENERGY;
+      energyBarVisual = energy;
+      distanceSinceEnergyLoss = 0;
+      prevBallX = ball.x;
+      prevBallY = ball.y;
+      prevSleeping = undefined;
+      monsterNightCount = 0;
+      monster.speed = MONSTER_BASE_SPEED;
+      gameWon = false;
+    }
+
+    document.getElementById("restart-btn").addEventListener("click", () => {
+      hideGameOverUI();
+      gameOver = false;
+      gameWon = false;
+      gameStarted = false;
+      document.getElementById("character-menu").classList.remove("hidden");
+    });
+
+    function wireCharacterMenu() {
+      const menu = document.getElementById("character-menu");
+      const ballGroup = document.getElementById("ball-options");
+      const monsterGroup = document.getElementById("monster-options");
+
+      function selectInGroup(container, selectedBtn) {
+        for (const b of container.querySelectorAll(".pick-option")) {
+          const on = b === selectedBtn;
+          b.classList.toggle("is-selected", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        }
+      }
+
+      ballGroup.addEventListener("click", (e) => {
+        const btn = e.target.closest(".pick-option[data-ball]");
+        if (!btn || !ballGroup.contains(btn)) return;
+        selectInGroup(ballGroup, btn);
+      });
+      monsterGroup.addEventListener("click", (e) => {
+        const btn = e.target.closest(".pick-option[data-monster]");
+        if (!btn || !monsterGroup.contains(btn)) return;
+        selectInGroup(monsterGroup, btn);
+      });
+
+      document.getElementById("start-game-btn").addEventListener("click", () => {
+        const ballBtn = ballGroup.querySelector(".pick-option.is-selected[data-ball]");
+        const monBtn = monsterGroup.querySelector(".pick-option.is-selected[data-monster]");
+        const ballSrc = ballBtn.getAttribute("data-ball");
+        const monsterSrc = monBtn.getAttribute("data-monster");
+
+        ballImg.src = ballSrc;
+
+        let finishOnce = false;
+        function finishStart() {
+          if (finishOnce) return;
+          finishOnce = true;
+          monster.loaded = true;
+          monster.placed = false;
+          resize();
+          resetGame();
+          gameOver = false;
+          gameWon = false;
+          hideGameOverUI();
+          gameStarted = true;
+          menu.classList.add("hidden");
+          last = performance.now();
+        }
+
+        monster.loaded = false;
+        monster.placed = false;
+        monsterImg.onload = finishStart;
+        monsterImg.src = monsterSrc;
+        requestAnimationFrame(() => {
+          if (monsterImg.complete && monsterImg.naturalHeight > 0) finishStart();
+        });
+      });
+    }
+    wireCharacterMenu();
+
+    function monsterStepX(monsterX, dir, dt, mw, vw, chairs) {
+      if (dir === 0) return monsterX;
+      let nextX = monsterX + dir * monster.speed * dt;
+      const half = mw / 2;
+      nextX = Math.min(Math.max(nextX, half), vw - half);
+      for (let k = 0; k < 4; k++) {
+        let hit = false;
+        for (const c of chairs) {
+          const mL = nextX - half;
+          const mR = nextX + half;
+          if (mR <= c.trunkLeft || mL >= c.trunkRight) continue;
+          hit = true;
+          if (dir > 0) nextX = c.trunkLeft - half - 0.02;
+          else nextX = c.trunkRight + half + 0.02;
+          nextX = Math.min(Math.max(nextX, half), vw - half);
+        }
+        if (!hit) break;
+      }
+      return nextX;
+    }
+
+    function clampMonsterToChairs(monsterX, mw, vw, chairs) {
+      const half = mw / 2;
+      let x = Math.min(Math.max(monsterX, half), vw - half);
+      for (const c of chairs) {
+        if (x + half > c.trunkLeft && x - half < c.trunkRight) {
+          const toLeft = c.trunkLeft - half - 0.02;
+          const toRight = c.trunkRight + half + 0.02;
+          x = Math.abs(x - toLeft) < Math.abs(x - toRight) ? toLeft : toRight;
+        }
+      }
+      return Math.min(Math.max(x, half), vw - half);
+    }
+
+    function sleepAnchorX(vw, mw, chairs) {
+      return clampMonsterToChairs(vw * 0.85, mw, vw, chairs);
+    }
+
+    function getSleepTable(vw, gy, chairs, mw) {
+      const cx = sleepAnchorX(vw, mw, chairs);
+      const tw = 120;
+      const tabletopH = 10;
+      const legH = 42;
+      const legW = 10;
+      const topY = gy - legH - tabletopH;
+      return { cx, tw, tabletopH, legH, legW, topY, gy };
+    }
+
+    /** Horizontal range for win (yellow) and energy (green) pizzas: floor between left chair and white sleep table. */
+    function pizzaSpawnBounds(vw, gy, chairs, mw) {
+      const tbl = getSleepTable(vw, gy, chairs, mw);
+      const tableLeft = tbl.cx - tbl.tw / 2;
+      const leftChairRight = chairs[0].trunkRight;
+      const gapPad = 6;
+      let minX = leftChairRight + gapPad + PIZZA_R;
+      let maxX = tableLeft - gapPad - PIZZA_R;
+      if (minX > maxX) {
+        const mid = (leftChairRight + tableLeft) * 0.5;
+        minX = maxX = mid;
+      }
+      return { minX, maxX };
+    }
+
+    function drawSleepTable(ctx, tbl) {
+      const left = tbl.cx - tbl.tw / 2;
+      const seatBottom = tbl.topY + tbl.tabletopH;
+      ctx.fillStyle = "#f8f8f8";
+      ctx.strokeStyle = "#c8c8c8";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.rect(left, tbl.topY, tbl.tw, tbl.tabletopH);
+      ctx.fill();
+      ctx.stroke();
+      const inset = 14;
+      ctx.fillRect(left + inset, seatBottom, tbl.legW, tbl.gy - seatBottom);
+      ctx.fillRect(left + tbl.tw - inset - tbl.legW, seatBottom, tbl.legW, tbl.gy - seatBottom);
+      ctx.strokeRect(left + inset, seatBottom, tbl.legW, tbl.gy - seatBottom);
+      ctx.strokeRect(left + tbl.tw - inset - tbl.legW, seatBottom, tbl.legW, tbl.gy - seatBottom);
+    }
+
+    function drawSun(ctx, x, y, r) {
+      ctx.fillStyle = "#ffdd44";
+      ctx.strokeStyle = "#e6b800";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = "#ffdd44";
+      ctx.lineWidth = 4;
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(x + Math.cos(a) * (r + 4), y + Math.sin(a) * (r + 4));
+        ctx.lineTo(x + Math.cos(a) * (r + 14), y + Math.sin(a) * (r + 14));
+        ctx.stroke();
+      }
+    }
+
+    function drawMoon(ctx, x, y, r) {
+      ctx.fillStyle = "#e8ecf5";
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#1a2f55";
+      ctx.beginPath();
+      ctx.arc(x + r * 0.35, y - r * 0.1, r * 1.05, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawEnergyBar(ctx, x, y, width, height, fillRatio, sleeping) {
+      const rr = Math.min(5, height * 0.35);
+      ctx.save();
+      ctx.fillStyle = sleeping ? "rgba(13, 31, 60, 0.5)" : "rgba(0, 0, 0, 0.4)";
+      ctx.strokeStyle = sleeping ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 255, 255, 0.22)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, rr);
+      ctx.fill();
+      ctx.stroke();
+      const pad = 3;
+      const innerW = Math.max(0, width - pad * 2);
+      const fillW = innerW * Math.min(Math.max(fillRatio, 0), 1);
+      if (fillW > 0.5) {
+        const g = ctx.createLinearGradient(x, y, x + width, y + height);
+        g.addColorStop(0, "#fef08a");
+        g.addColorStop(0.45, "#facc15");
+        g.addColorStop(1, "#ca8a04");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.roundRect(x + pad, y + pad, fillW, height - pad * 2, Math.max(1, rr - 2));
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawSkyTimer(ctx, w, gy, now) {
+      const sleeping = isSleeping(now);
+      const n = timerSeconds(now);
+      const fontSize = Math.max(22, Math.min(40, w * 0.045));
+      ctx.font = `700 ${fontSize}px system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = sleeping ? "#0d1f3c" : "#ffffff";
+      ctx.strokeStyle = sleeping ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.25)";
+      ctx.lineWidth = 3;
+      const tx = w * 0.5;
+      const ty = 28;
+      ctx.strokeText(String(n), tx, ty);
+      ctx.fillText(String(n), tx, ty);
+    }
+
+    function drawHud(ctx, w, now) {
+      const sleeping = isSleeping(now);
+      const fontSize = Math.max(18, Math.min(32, w * 0.038));
+      ctx.font = `700 ${fontSize}px system-ui, sans-serif`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = sleeping ? "#0d1f3c" : "#ffffff";
+      ctx.strokeStyle = sleeping ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.25)";
+      ctx.lineWidth = 3;
+      const tx = 24;
+      const ty = 28;
+      const lineGap = fontSize + 6;
+      const line1 = `Coins: ${coins}`;
+      ctx.strokeText(line1, tx, ty);
+      ctx.fillText(line1, tx, ty);
+      const barH = Math.max(14, Math.min(22, fontSize * 0.65));
+      const barW = Math.min(200, w * 0.42);
+      const barY = ty + lineGap;
+      const fillRatio = Math.min(Math.max(energyBarVisual / START_ENERGY, 0), 1);
+      drawEnergyBar(ctx, tx, barY, barW, barH, fillRatio, sleeping);
+      const hudSliceScale = 0.42;
+      const sliceStep = PIZZA_R * hudSliceScale * 2.2;
+      const rowY = barY + barH + 10 + PIZZA_R * hudSliceScale;
+      const nSlices = Math.min(pizzaSlices, WIN_PIZZA_SLICES);
+      for (let i = 0; i < nSlices; i++) {
+        drawPizzaSliceIcon(ctx, tx + i * sliceStep, rowY, hudSliceScale);
+      }
+    }
+
+    function drawPizzaSliceIcon(ctx, cx, cy, scale = 1) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      ctx.rotate(-Math.PI / 4);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, PIZZA_R, -Math.PI / 5, Math.PI / 5);
+      ctx.closePath();
+      ctx.fillStyle = "#f4a020";
+      ctx.strokeStyle = "#c45c00";
+      ctx.lineWidth = Math.max(1, 2 / scale);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#c62828";
+      ctx.beginPath();
+      ctx.arc(PIZZA_R * 0.48, PIZZA_R * 0.12, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(PIZZA_R * 0.32, -PIZZA_R * 0.22, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawEnergyPizzaSliceIcon(ctx, cx, cy, scale = 1) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      ctx.rotate(-Math.PI / 4);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, PIZZA_R, -Math.PI / 5, Math.PI / 5);
+      ctx.closePath();
+      ctx.fillStyle = "#7cb342";
+      ctx.strokeStyle = "#33691e";
+      ctx.lineWidth = Math.max(1, 2 / scale);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#ffeb3b";
+      ctx.beginPath();
+      ctx.moveTo(PIZZA_R * 0.15, -PIZZA_R * 0.35);
+      ctx.lineTo(PIZZA_R * 0.05, -PIZZA_R * 0.08);
+      ctx.lineTo(PIZZA_R * 0.28, -PIZZA_R * 0.12);
+      ctx.lineTo(PIZZA_R * 0.12, PIZZA_R * 0.12);
+      ctx.lineTo(PIZZA_R * 0.42, -PIZZA_R * 0.02);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawWholePizza(ctx, cx, cy, radius) {
+      ctx.fillStyle = "#e8a020";
+      ctx.strokeStyle = "#a05200";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#f5d080";
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius * 0.88, 0, Math.PI * 2);
+      ctx.fill();
+      const dots = [
+        [0.35, -0.15],
+        [-0.25, 0.2],
+        [0.1, 0.35],
+        [-0.35, -0.25],
+        [0.4, 0.15],
+      ];
+      ctx.fillStyle = "#c62828";
+      for (const [dx, dy] of dots) {
+        ctx.beginPath();
+        ctx.arc(cx + dx * radius, cy + dy * radius, radius * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawYouWon(ctx, w, gy, now) {
+      const sleeping = isSleeping(now);
+      const fontSize = Math.max(28, Math.min(52, w * 0.09));
+      ctx.font = `800 ${fontSize}px system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const tx = w * 0.5;
+      const ty = gy * 0.38;
+      ctx.fillStyle = sleeping ? "#0d1f3c" : "#ffffff";
+      ctx.strokeStyle = sleeping ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.35)";
+      ctx.lineWidth = 4;
+      ctx.strokeText("YOU WON", tx, ty);
+      ctx.fillText("YOU WON", tx, ty);
+    }
+
+    function chairBallColliders(c, gy, vw) {
+      const legW = 8;
+      const st = c.seatTop;
+      const bh = c.backH;
+      const rects = [
+        { left: c.x + 4, right: c.x + 4 + legW, top: st + 2, bottom: gy },
+        { left: c.x + c.w - 4 - legW, right: c.x + c.w - 4, top: st + 2, bottom: gy },
+      ];
+      if (c.x + c.w * 0.5 < vw * 0.5) {
+        rects.push({ left: c.x, right: c.x + 12, top: st - bh, bottom: st - 1 });
+      } else {
+        rects.push({ left: c.x + c.w - 12, right: c.x + c.w, top: st - bh, bottom: st - 1 });
+      }
+      return rects;
+    }
+
+    function drawChairs(ctx, gy, chairs) {
+      for (const c of chairs) {
+        const x = c.x;
+        const w = c.w;
+        const st = c.seatTop;
+        const bh = c.backH;
+        const legW = 8;
+        const seatH = 10;
+        ctx.fillStyle = "#b22222";
+        ctx.strokeStyle = "#7f1010";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(x, st - bh, 12, bh + seatH);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#c92a2a";
+        ctx.beginPath();
+        ctx.rect(x, st - seatH, w, seatH);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#b22222";
+        ctx.fillRect(x + 4, st, legW, gy - st);
+        ctx.fillRect(x + w - 4 - legW, st, legW, gy - st);
+        ctx.strokeRect(x + 4, st, legW, gy - st);
+        ctx.strokeRect(x + w - 4 - legW, st, legW, gy - st);
+      }
+    }
+
+    function viewport() {
+      let w = canvas.clientWidth;
+      let h = canvas.clientHeight;
+      if (!w || !h) {
+        w = window.innerWidth || 800;
+        h = window.innerHeight || 600;
+      }
+      return { w, h };
+    }
+
+    function resize() {
+      const { w, h } = viewport();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const gy = groundY();
+      const chairs = getChairs(w, gy);
+      ball.x = Math.min(Math.max(ball.x || w / 2, ball.r), w - ball.r);
+      ball.y = Math.min(Math.max(ball.y, ball.r), gy - ball.r);
+      prevBallX = ball.x;
+      prevBallY = ball.y;
+      if (monster.loaded) {
+        const { w: mw } = monsterDrawSize();
+        if (!monster.placed) {
+          monster.x = sleepAnchorX(w, mw, chairs);
+          monster.placed = true;
+        } else {
+          const now = performance.now();
+          if (isSleeping(now)) {
+            monster.x = sleepAnchorX(w, mw, chairs);
+          } else {
+            monster.x = clampMonsterToChairs(monster.x, mw, w, chairs);
+          }
+        }
+      }
+    }
+
+    window.addEventListener("resize", resize);
+    ball.x = window.innerWidth / 2;
+    ball.y = window.innerHeight - 200;
+    resize();
+    prevBallX = ball.x;
+    prevBallY = ball.y;
+    window.addEventListener("load", resize);
+
+    window.addEventListener("keydown", (e) => {
+      if (keys.hasOwnProperty(e.code)) {
+        keys[e.code] = true;
+        e.preventDefault();
+      }
+    });
+    window.addEventListener("keyup", (e) => {
+      if (keys.hasOwnProperty(e.code)) {
+        keys[e.code] = false;
+        e.preventDefault();
+      }
+    });
+
+    let last = performance.now();
+
+    function groundY() {
+      return viewport().h - 80;
+    }
+
+    function monsterDrawSize() {
+      if (!monster.loaded || monsterImg.naturalHeight === 0) return { w: 56, h: monster.height };
+      const h = monster.height;
+      const w = (monsterImg.naturalWidth / monsterImg.naturalHeight) * h;
+      return { w, h };
+    }
+
+    function step(dt, now) {
+      if (!gameStarted) return;
+      if (gameOver) return;
+
+      const canMove = energy > 0;
+      let ax = 0;
+      if (canMove) {
+        if (keys.ArrowLeft) ax -= 1;
+        if (keys.ArrowRight) ax += 1;
+      }
+      if (ax !== 0) {
+        ball.vx = (ax / Math.abs(ax)) * moveSpeed;
+      } else {
+        ball.vx *= Math.pow(0.2, dt * 60);
+        if (Math.abs(ball.vx) < 4) ball.vx = 0;
+      }
+
+      if (canMove && keys.ArrowUp && ball.onGround) {
+        ball.vy = -jumpSpeed;
+        ball.onGround = false;
+      }
+
+      ball.vy += gravity * dt;
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
+
+      const { w: vw } = viewport();
+      const gy = groundY();
+      const chairs = getChairs(vw, gy);
+      const { w: mw } = monsterDrawSize();
+      const sleeping = isSleeping(now);
+
+      if (prevSleeping === undefined) {
+        prevSleeping = sleeping;
+        if (!sleeping) {
+          spawnCookies(vw, gy, chairs);
+          bumpMonsterSpeedForNewNight();
+        }
+        if (sleeping && !gameWon) {
+          spawnPizzaSlice(vw, gy, chairs, mw);
+          energyPizzaSlices.length = 0;
+          nextEnergySpawnAt = now + ENERGY_PIZZA_SPAWN_MS;
+        }
+      } else if (sleeping !== prevSleeping) {
+        if (!sleeping) {
+          pizzaSlice = null;
+          energyPizzaSlices.length = 0;
+          spawnCookies(vw, gy, chairs);
+          bumpMonsterSpeedForNewNight();
+        } else {
+          cookies.length = 0;
+          if (!gameWon) {
+            spawnPizzaSlice(vw, gy, chairs, mw);
+            energyPizzaSlices.length = 0;
+            nextEnergySpawnAt = now + ENERGY_PIZZA_SPAWN_MS;
+          }
+        }
+        prevSleeping = sleeping;
+      }
+
+      while (sleeping && !gameWon && now >= nextEnergySpawnAt) {
+        pushRandomEnergyPizzaSlice(vw, gy, chairs, mw);
+        nextEnergySpawnAt += ENERGY_PIZZA_SPAWN_MS;
+      }
+
+      if (!sleeping && cookies.length) {
+        const cy = cookieCenterY(gy);
+        const collectR = ball.r + COOKIE_R;
+        const collectR2 = collectR * collectR;
+        for (let i = cookies.length - 1; i >= 0; i--) {
+          const cx = cookies[i].x;
+          const dx = ball.x - cx;
+          const dy = ball.y - cy;
+          if (dx * dx + dy * dy <= collectR2) {
+            coins += 1;
+            cookies.splice(i, 1);
+          }
+        }
+      }
+
+      if (sleeping && pizzaSlice && coins >= 10 && !gameWon) {
+        const cy = pizzaCenterY(gy);
+        const collectR = ball.r + PIZZA_R;
+        const collectR2 = collectR * collectR;
+        const dx = ball.x - pizzaSlice.x;
+        const dy = ball.y - cy;
+        if (dx * dx + dy * dy <= collectR2) {
+          coins -= 10;
+          pizzaSlices += 1;
+          if (pizzaSlices >= WIN_PIZZA_SLICES) {
+            pizzaSlices = WIN_PIZZA_SLICES;
+            gameWon = true;
+            energyPizzaSlices.length = 0;
+          }
+          pizzaSlice = null;
+        }
+      }
+
+      if (sleeping && energyPizzaSlices.length && !gameWon) {
+        const cy = pizzaCenterY(gy);
+        const collectR = ball.r + PIZZA_R;
+        const collectR2 = collectR * collectR;
+        for (let i = energyPizzaSlices.length - 1; i >= 0; i--) {
+          const ep = energyPizzaSlices[i];
+          const dx = ball.x - ep.x;
+          const dy = ball.y - cy;
+          if (dx * dx + dy * dy <= collectR2) {
+            energy += ENERGY_PIZZA_BONUS;
+            energyPizzaSlices.splice(i, 1);
+          }
+        }
+      }
+
+      const minX = ball.r;
+      const maxX = vw - ball.r;
+
+      if (ball.x < minX) {
+        ball.x = minX;
+        ball.vx = 0;
+      } else if (ball.x > maxX) {
+        ball.x = maxX;
+        ball.vx = 0;
+      }
+
+      ball.onGround = false;
+      landOnSurfaces(ball, gy, chairs, vw);
+
+      for (const c of chairs) {
+        for (const rect of chairBallColliders(c, gy, vw)) {
+          resolveCircleRect(ball, rect);
+        }
+      }
+
+      const top = ball.r;
+      if (ball.y < top) {
+        ball.y = top;
+        ball.vy = 0;
+      }
+
+      if (monster.loaded) {
+        const { w: mw, h: mh } = monsterDrawSize();
+        if (gameWon) {
+          monster.x = sleepAnchorX(vw, mw, chairs);
+        } else if (isSleeping(now)) {
+          monster.x = sleepAnchorX(vw, mw, chairs);
+        } else {
+          let dir = 0;
+          if (ball.x > monster.x) dir = 1;
+          else if (ball.x < monster.x) dir = -1;
+          monster.x = monsterStepX(monster.x, dir, dt, mw, vw, chairs);
+          const left = monster.x - mw / 2;
+          const right = monster.x + mw / 2;
+          const top = gy - mh;
+          const bottom = gy;
+          if (circleRectOverlap(ball.x, ball.y, ball.r, left, top, right, bottom)) {
+            gameOver = true;
+            showGameOverUI();
+          }
+        }
+      }
+
+      const dxFrame = ball.x - prevBallX;
+      const dyFrame = ball.y - prevBallY;
+      distanceSinceEnergyLoss += Math.hypot(dxFrame, dyFrame);
+      while (distanceSinceEnergyLoss >= DRAIN_PX_PER_ENERGY) {
+        distanceSinceEnergyLoss -= DRAIN_PX_PER_ENERGY;
+        if (energy > 0) energy -= 1;
+      }
+      prevBallX = ball.x;
+      prevBallY = ball.y;
+
+      const energySmooth = Math.min(1, dt * 14);
+      energyBarVisual += (energy - energyBarVisual) * energySmooth;
+
+      if (!gameOver && !gameWon && energy <= 0 && isBallOnChairSeat(ball, chairs)) {
+        gameOver = true;
+        showGameOverUI();
+      }
+    }
+
+    function draw(now) {
+      if (!gameStarted) return;
+      const { w, h } = viewport();
+      const gy = groundY();
+      const chairs = getChairs(w, gy);
+      const sleeping = isSleeping(now);
+
+      ctx.fillStyle = sleeping ? "#4da6ff" : "#1a2f55";
+      ctx.fillRect(0, 0, w, gy);
+
+      if (sleeping) {
+        drawSun(ctx, w * 0.15, gy * 0.22, Math.min(28, w * 0.035));
+      } else {
+        drawMoon(ctx, w * 0.82, gy * 0.2, Math.min(26, w * 0.032));
+      }
+
+      drawSkyTimer(ctx, w, gy, now);
+      drawHud(ctx, w, now);
+      if (gameWon) drawYouWon(ctx, w, gy, now);
+
+      ctx.fillStyle = "#2d8a3e";
+      ctx.fillRect(0, gy, w, h - gy);
+
+      drawChairs(ctx, gy, chairs);
+
+      if (!sleeping && cookies.length) {
+        const cy = cookieCenterY(gy);
+        for (const ck of cookies) {
+          ctx.fillStyle = "#8b4513";
+          ctx.strokeStyle = "#5c2e0e";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(ck.x, cy, COOKIE_R, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#d4a574";
+          ctx.beginPath();
+          ctx.arc(ck.x - 3, cy - 2, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      if (sleeping && pizzaSlice && !gameWon) {
+        drawPizzaSliceIcon(ctx, pizzaSlice.x, pizzaCenterY(gy));
+      }
+      if (sleeping && energyPizzaSlices.length && !gameWon) {
+        const epy = pizzaCenterY(gy);
+        for (const ep of energyPizzaSlices) {
+          drawEnergyPizzaSliceIcon(ctx, ep.x, epy);
+        }
+      }
+
+      const bd = ball.r * 2 * ballImgVisualScale;
+      if (ballImg.complete && ballImg.naturalWidth) {
+        const face = ball.vx < 0 ? -1 : 1;
+        ctx.save();
+        ctx.translate(ball.x, ball.y);
+        ctx.scale(face, 1);
+        ctx.drawImage(ballImg, -bd / 2, -bd / 2, bd, bd);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (monster.loaded) {
+        const { w: mw, h: mh } = monsterDrawSize();
+        const dir = ball.x >= monster.x ? 1 : -1;
+        if (gameWon) {
+          const tbl = getSleepTable(w, gy, chairs, mw);
+          drawSleepTable(ctx, tbl);
+          ctx.save();
+          ctx.translate(monster.x, gy);
+          ctx.scale(dir, 1);
+          ctx.drawImage(monsterImg, -mw / 2, -mh + 22, mw, mh);
+          ctx.restore();
+          const wholeR = Math.min(34, w * 0.045);
+          const px = monster.x + dir * (mw / 2 + wholeR + 14);
+          drawWholePizza(ctx, px, gy - wholeR - 4, wholeR);
+        } else if (sleeping) {
+          const tbl = getSleepTable(w, gy, chairs, mw);
+          drawSleepTable(ctx, tbl);
+          ctx.save();
+          ctx.translate(monster.x, gy);
+          ctx.scale(dir, 1);
+          ctx.drawImage(monsterImg, -mw / 2, -mh + 22, mw, mh);
+          ctx.restore();
+        } else {
+          ctx.save();
+          ctx.translate(monster.x, gy);
+          ctx.scale(dir, 1);
+          ctx.drawImage(monsterImg, -mw / 2, -mh, mw, mh);
+          ctx.restore();
+        }
+      }
+    }
+
+    function frame(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      step(dt, now);
+      draw(now);
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>

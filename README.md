@@ -1,13 +1,14 @@
 # Blagoj Atanasovski
 
-I'm a Senior Software Engineer at [Cast AI](https://cast.ai) and co-founder of [AdeptCode](https://adeptcode.io).
+I'm an Engineering Manager at [Cast AI](https://cast.ai) and co-founder of [AdeptCode](https://adeptcode.io).
 
 I work with Kubernetes and Go, currently creating seamless cross-region, cross-cloud capabilities in Kubernetes clusters so you can 
 1. reach resources that might be missing in your region without migrating your whole cluster
 1. reach cheaper resources
 1. connect your own compute with that of managed k8s
 
-Previously Software Engineer at: 
+Previously Engineer at: 
+* Omni Team at Cast AI
 * Reporting Team at Cast AI
 * Aequus Ads, which got acquired by Moloco
 * [Timescale](https://timescale.com) 
