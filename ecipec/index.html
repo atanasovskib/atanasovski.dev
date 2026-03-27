@@ -130,6 +130,24 @@
     #start-game-btn:hover {
       background: #7dd3fc;
     }
+    #character-menu .game-instructions {
+      max-width: 34rem;
+      margin: 0 auto;
+      padding: 0 0.25rem;
+      text-align: left;
+      font: 500 0.9rem/1.45 system-ui, sans-serif;
+      color: #cbd5e1;
+    }
+    #character-menu .game-instructions ol {
+      margin: 0;
+      padding-left: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    #character-menu .game-instructions li {
+      padding-left: 0.25rem;
+    }
   </style>
 </head>
 <body>
@@ -140,6 +158,14 @@
   </div>
   <div id="character-menu" aria-label="Character selection">
     <h1>Choose your characters</h1>
+    <div class="game-instructions" aria-label="How to play">
+      <ol>
+        <li>Move left/right and up to jump. Jump on the chairs for safety</li>
+        <li>The chaser chases you only at night. Collect cookies during the night</li>
+        <li>With 10 cookies you can buy 1 orange pizza slice. Collect 6 orange pizza slices to win</li>
+        <li>Running around takes energy. Look for green pizza slices to replenish your energy</li>
+      </ol>
+    </div>
     <div>
       <h2>Who is chased</h2>
       <div id="ball-options" class="pick-options" role="group" aria-label="Character that is chased">
@@ -158,16 +184,16 @@
         <button type="button" class="pick-option" data-ball="moth.png" aria-pressed="false" aria-label="moth">
           <img src="moth.png" alt="" width="108" height="108" />
         </button>
-        <button type="button" class="pick-option" data-ball="pinat.png" aria-pressed="false" aria-label="pinat">
-          <img src="pinat.png" alt="" width="108" height="108" />
+        <button type="button" class="pick-option" data-monster="pooper.png" aria-pressed="false" aria-label="pooper">
+          <img src="pooper.png" alt="" width="108" height="108" />
         </button>
-        <button type="button" class="pick-option" data-ball="mamenmem.png" aria-pressed="false" aria-label="mamenmem">
-          <img src="mamenmem.png" alt="" width="108" height="108" />
+        <button type="button" class="pick-option" data-monster="krofn.png" aria-pressed="false" aria-label="krofn">
+          <img src="krofn.png" alt="" width="108" height="108" />
         </button>
       </div>
     </div>
     <div>
-      <h2>Who does the chasing</h2>
+      <h2>Chaser</h2>
       <div id="monster-options" class="pick-options" role="group" aria-label="Character that chases">
         <button type="button" class="pick-option" data-monster="eci_pec.png" aria-pressed="false" aria-label="eci_pec">
           <img src="eci_pec.png" alt="" width="108" height="108" />
@@ -189,6 +215,12 @@
         </button>
         <button type="button" class="pick-option" data-monster="mamenmem.png" aria-pressed="false" aria-label="mamenmem">
           <img src="mamenmem.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="pooper.png" aria-pressed="false" aria-label="pooper">
+          <img src="pooper.png" alt="" width="108" height="108" />
+        </button>
+        <button type="button" class="pick-option" data-monster="krofn.png" aria-pressed="false" aria-label="krofn">
+          <img src="krofn.png" alt="" width="108" height="108" />
         </button>
       </div>
     </div>
