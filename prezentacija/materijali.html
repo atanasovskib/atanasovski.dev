@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Материјали | AI алатки за барање работа</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="assets/logo-sos.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo-sos.svg" alt="СОС Детско село Македонија" width="200" height="53" />
+      </a>
+      <nav class="nav" aria-label="Главна навигација">
+        <a href="index.html">Почетна</a>
+        <a href="prezentacija.html">Презентација</a>
+        <a href="materijali.html" aria-current="page">Материјали</a>
+        <a class="nav-cta" href="prasanje.html">Прашај</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <section class="hero">
+      <p class="hero-kicker">Преземи и вежбај</p>
+      <h1>Материјали и промптови</h1>
+      <p class="hero-lead">
+        Готови текстови на македонски за ChatGPT или Gemini.
+        Копирај, замени ги деловите во [загради], залепи CV или оглас.
+      </p>
+    </section>
+
+    <div class="note-box">
+      <strong>Бесплатни алатки:</strong>
+      <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer">ChatGPT</a>
+      ·
+      <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">Gemini</a>
+      — доволна е обична сметка, без претплата.
+    </div>
+
+    <section class="section">
+      <h2>Промптови од обуката</h2>
+      <p class="section-intro">Овие четири ги користиме во живо на предавањето.</p>
+
+      <article class="prompt-block">
+        <div class="prompt-meta">
+          <h3>1. CV ↔ оглас</h3>
+          <div class="prompt-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-copy="prompt-1">Копирај</button>
+            <a class="btn btn-ghost btn-sm" href="materijali/prompt-01-cv-oglas.txt" download>Преземи .txt</a>
+          </div>
+        </div>
+        <pre class="prompt-text" id="prompt-1">Еве ја мојата кратка биографија и еве го огласот. Спореди ги. Кажи: (1) што веќе добро одговара, (2) што недостасува или е слабо, (3) кои 3 работи да ги нагласам повеќе, (4) предложи подобрена верзија само на делот „Искуство“ / „Образование“ — без измислување факти што ги немам.
+
+[Залепи CV]
+[Залепи оглас]</pre>
+      </article>
+
+      <article class="prompt-block">
+        <div class="prompt-meta">
+          <h3>2. Прашања за интервју</h3>
+          <div class="prompt-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-copy="prompt-4">Копирај</button>
+            <a class="btn btn-ghost btn-sm" href="materijali/prompt-04-intervju-prasanja.txt" download>Преземи .txt</a>
+          </div>
+        </div>
+        <pre class="prompt-text" id="prompt-4">Јас аплицирам за [позиција] во [компанија/тип]. Генерирај 8 можни прашања за интервју (мешавина: општи, за мотивација, за ситуација). За секое дај: краток совет што да избегнам + пример одговор во 4–6 реченици што звучи природно за млад кандидат без многу искуство.</pre>
+      </article>
+
+      <article class="prompt-block">
+        <div class="prompt-meta">
+          <h3>3. Симулација на интервју</h3>
+          <div class="prompt-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-copy="prompt-5">Копирај</button>
+            <a class="btn btn-ghost btn-sm" href="materijali/prompt-05-simulacija-intervju.txt" download>Преземи .txt</a>
+          </div>
+        </div>
+        <pre class="prompt-text" id="prompt-5">Ти си интервјуер за позицијата [назив]. Поставувај ми по едно прашање. Чекај го мојот одговор, па дај краток фидбек (што беше добро / што да подобрам) и потоа следно прашање. Почни сега. На крај дај оценка 1–10 и 3 конкретни совети.</pre>
+      </article>
+
+      <article class="prompt-block">
+        <div class="prompt-meta">
+          <h3>4. Истражување на компанија и позиција</h3>
+          <div class="prompt-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-copy="prompt-6">Копирај</button>
+            <a class="btn btn-ghost btn-sm" href="materijali/prompt-06-istrazuvanje-kompanija.txt" download>Преземи .txt</a>
+          </div>
+        </div>
+        <pre class="prompt-text" id="prompt-6">Истражи ја компанијата [име] и позицијата [назив] во Македонија (ако немаш сигурни податоци, кажи што е претпоставка). Дај: што прават, кој им е клиент/пазар, што најверојатно бараат од млад кандидат, 5 паметни прашања што јас да ги прашам на интервју, и црвени знамиња на што да внимавам во огласот.</pre>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>Датотеки за преземање</h2>
+      <p class="section-intro">Шпаргалка и пример CV/оглас за вежба (placeholder додека се додадат вистинските).</p>
+      <ul class="download-list">
+        <li>
+          <a href="materijali/spargalka.txt" download>
+            Шпаргалка
+            <span>spargalka.txt</span>
+          </a>
+        </li>
+        <li>
+          <a href="materijali/primer-cv.txt" download>
+            Пример CV (placeholder)
+            <span>primer-cv.txt</span>
+          </a>
+        </li>
+        <li>
+          <a href="materijali/primer-oglas.txt" download>
+            Пример оглас (placeholder)
+            <span>primer-oglas.txt</span>
+          </a>
+        </li>
+        <li>
+          <a href="materijali/prompt-01-cv-oglas.txt" download>
+            Промпт 1 — CV ↔ оглас
+            <span>.txt</span>
+          </a>
+        </li>
+        <li>
+          <a href="materijali/prompt-04-intervju-prasanja.txt" download>
+            Промпт 4 — прашања за интервју
+            <span>.txt</span>
+          </a>
+        </li>
+        <li>
+          <a href="materijali/prompt-05-simulacija-intervju.txt" download>
+            Промпт 5 — симулација
+            <span>.txt</span>
+          </a>
+        </li>
+        <li>
+          <a href="materijali/prompt-06-istrazuvanje-kompanija.txt" download>
+            Промпт 6 — истражување
+            <span>.txt</span>
+          </a>
+        </li>
+      </ul>
+      <p class="note-box" style="margin-top: 1.25rem">
+        <strong>За предавачот:</strong> замени ги <code>primer-cv.txt</code> и <code>primer-oglas.txt</code>
+        со вистински анонимизирани примери кога ќе ги имаш.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p><strong>СОС Детско село Македонија</strong></p>
+      <p class="footer-note">
+        <a href="https://sos.org.mk">sos.org.mk</a> ·
+        <a href="prasanje.html">Постави прашање</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll("[data-copy]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var el = document.getElementById(btn.getAttribute("data-copy"));
+        if (!el) return;
+        var text = el.textContent;
+        function done() {
+          var prev = btn.textContent;
+          btn.textContent = "Копирано!";
+          setTimeout(function () { btn.textContent = prev; }, 1600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {
+            fallback();
+          });
+        } else {
+          fallback();
+        }
+        function fallback() {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); done(); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

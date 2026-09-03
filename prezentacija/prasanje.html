@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Постави прашање | AI алатки за барање работа</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="assets/logo-sos.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo-sos.svg" alt="СОС Детско село Македонија" width="200" height="53" />
+      </a>
+      <nav class="nav" aria-label="Главна навигација">
+        <a href="index.html">Почетна</a>
+        <a href="prezentacija.html">Презентација</a>
+        <a href="materijali.html">Материјали</a>
+        <a class="nav-cta" href="prasanje.html" aria-current="page">Прашај</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <section class="hero">
+      <p class="hero-kicker">После обуката</p>
+      <h1>Постави прашање</h1>
+      <p class="hero-lead">
+        Остави прашање поврзано со AI алатките и барањето работа.
+        Одговорот ќе го добиеш подоцна на е-маил.
+      </p>
+    </section>
+
+    <div class="note-box form-config-missing" id="form-config-banner" hidden>
+      <strong>За предавачот:</strong> формата сè уште не е поврзана со Google Form.
+      Пополни <code>js/form-config.js</code> според упатството во README.
+    </div>
+
+    <div class="form-card">
+      <form id="question-form" novalidate>
+        <div class="form-group">
+          <label for="name">Име</label>
+          <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+        </div>
+        <div class="form-group">
+          <label for="email">Телефон / е-маил</label>
+          <span class="hint">За да можеме да одговориме</span>
+          <input id="email" name="email" type="text" autocomplete="email" required maxlength="200" />
+        </div>
+        <div class="form-group">
+          <label for="question">Прашање</label>
+          <textarea id="question" name="question" required maxlength="4000" placeholder="На пр.: Како да напишам мотивациско писмо ако немам искуство?"></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Испрати прашање</button>
+        <div class="form-status" id="form-status" role="status" aria-live="polite" hidden></div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p><strong>СОС Детско село Македонија</strong></p>
+      <p class="footer-note"><a href="https://sos.org.mk">sos.org.mk</a></p>
+    </div>
+  </footer>
+
+  <script src="js/form-config.js"></script>
+  <script src="js/form.js"></script>
+</body>
+</html>
