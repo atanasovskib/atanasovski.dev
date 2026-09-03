@@ -438,6 +438,22 @@ a:hover {
   color: var(--sos-muted);
 }
 
+.howto-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 42rem;
+}
+
+.howto-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--sos-line);
+}
+
+.howto-list li:last-child {
+  border-bottom: 0;
+}
+
 .note-box {
   padding: 1rem 1.15rem;
   background: var(--sos-blue-soft);
